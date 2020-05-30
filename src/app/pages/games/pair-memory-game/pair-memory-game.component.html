@@ -1,0 +1,34 @@
+
+
+
+<div >
+    <div fxLayout="row">
+        <div fxLayout="column" *ngFor="let item of playerToPairsFound | keyvalue">
+            {{ item.key }} : {{ item.value }}
+        </div>
+    </div>
+
+    <div>{{ currentPlayer.name}}'s turn</div>
+
+    <div 
+        fxLayout="column"
+        fxLayoutAlign="start"
+        fxLayoutGap="10px">
+        <div 
+            *ngFor="let cardsRow of grid; index as i;"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            fxLayoutGap="10px" >
+            <div 
+                *ngFor="let card of cardsRow"
+                (click)="selectCard(card)"
+                 [style.background-color]="card.color"
+                 style="cursor: pointer"
+                 >
+                 
+                {{ card.color }} {{ card._foundPair  ? "Found pair" : "Not found" }}
+        </div>
+    </div>
+    
+    </div>
+</div>  
