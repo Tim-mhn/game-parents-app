@@ -2,9 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Card, Player} from '../../../models/models';
 import _ from "lodash";
 import { PlayerService } from '../../../services/player.service';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgPlural } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
+import { SelectMultipleControlValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'app-pair-memory-game',
@@ -23,7 +24,8 @@ export class PairMemoryGameComponent implements OnInit, OnDestroy {
 
   private subs: Subscription = new Subscription();
 
-  constructor(private playerService: PlayerService) { 
+  constructor(private playerService: PlayerService,
+              private _snackBar: MatSnackBar) { 
 
   }
 
@@ -48,11 +50,17 @@ export class PairMemoryGameComponent implements OnInit, OnDestroy {
   }
   private getCardList(): Card[] {
     var cardList: Card[] = []
-    const colors = ["blue", "green", "black", "yellow", "red", "pink"]
-    for (let c of colors) {
+    const colors = ["blue", "green", "black", "yellow"]
+    let imagesPath = ["https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg"]
+    imagesPath.push("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyUhTVCj60quboNSvY4C1iPi45GckIKGo3qi9kQW9HtFvTRBiBrw&s")
+    imagesPath.push("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRatFPpthGUTU3_LtepVkTxVjRESA2By3HOkCUyliHgOuolOQyn&s")
+    imagesPath.push("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvqdqoXwNrfuCfS_FWBhdMq551x7FzdGCklOciRPw9f5Fn0cCz&s")
+    
+    for (let [i, color] of colors.entries()) {
       // Add twice a card with same img / color with versions 0 and 1 -> pair 
-      cardList.push(new Card(c, 0))
-      cardList.push(new Card(c, 1))
+      const imgPath = imagesPath[i]
+      cardList.push(new Card(color, 0, imgPath))
+      cardList.push(new Card(color, 1, imgPath))
 
     }
     return cardList;
@@ -77,6 +85,16 @@ export class PairMemoryGameComponent implements OnInit, OnDestroy {
 
   public selectCard(card: Card) {
     console.log("select card called !")
+
+    // Handle errors : card already selected or pair already found 
+    if (card.selected || card.foundPair) {
+      let message = card.foundPair ? "Pair already found" : "Card already selected"
+      this.openSnackBar(message);
+      return
+    }
+
+    card.selected = true
+
     if (this.firstCardPick) {
       this.secondCardPick = card;
       this.checkMatch(this.firstCardPick, this.secondCardPick);
@@ -98,13 +116,35 @@ export class PairMemoryGameComponent implements OnInit, OnDestroy {
   }
 
   private resetPicks() {
+    this.firstCardPick.selected = false;
+    this.secondCardPick.selected = false;
     this.firstCardPick = null;
     this.secondCardPick = null;
   }
 
   private nextTurn() {
-    this.resetPicks();
-    this.currentPlayer = this.players.filter(p => this.currentPlayer.name != p.name)[0]
+    let cardsLeft = this.cards.filter((card: Card) => !card.foundPair);
+    if (cardsLeft.length == 0) {
+      this.endGame()
+    }
+    
+    // Timeout to see the second card before it flips back
+    const secondImgTimeout = 2000;
+    setTimeout(() => {
+      this.resetPicks();
+      this.currentPlayer = this.players.filter(p => this.currentPlayer.name != p.name)[0]
+    }, secondImgTimeout)
+
+  }
+
+  private endGame() {
+    let winner = this.players.reduce((best, current) => (this.playerToPairsFound[best.name] > this.playerToPairsFound[current.name]) ? best : current)
+    this.openSnackBar("Winner is " + winner.name + " with " + this.playerToPairsFound[winner.name] + " pairs")
+  }
+  private openSnackBar(message: string ) {
+    this._snackBar.open(message, "Dismiss", {
+      duration: 2000 // ms
+    });
   }
 
   ngOnDestroy()  {

@@ -3,19 +3,28 @@ export class Card {
     public version: 0 | 1; 
     private _foundPair: boolean = false;
     public imgPath: string = "";
+    private _selected: boolean = false;
 
 
-    constructor(color, version, _foundPair=false, imgPath="") {
+
+    constructor(color, version, imgPath="", _foundPair=false, ) {
         this.color = color;
         this.version = version;
-        this._foundPair = _foundPair;
         this.imgPath = imgPath;
+        this._foundPair = _foundPair;
     }
     public get foundPair(): boolean {
         return this._foundPair;
     }
     public set foundPair(value: boolean) {
         this._foundPair = value;
+    }
+
+    public get selected(): boolean {
+        return this._selected;
+    }
+    public set selected(value: boolean) {
+        this._selected = value;
     }
 
 

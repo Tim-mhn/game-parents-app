@@ -1,34 +1,28 @@
-
-
-
-<div >
-    <div fxLayout="row">
-        <div fxLayout="column" *ngFor="let item of playerToPairsFound | keyvalue">
-            {{ item.key }} : {{ item.value }}
+<div>
+    <div fxLayout="row" fxLayoutAlign="space-evenly start ">
+        <div 
+            fxLayout="column" 
+            *ngFor="let player2pairs of playerToPairsFound | keyvalue"
+            [ngClass]="{ 'current-turn': player2pairs.key == currentPlayer.name } ">
+            <mat-card class="example-card">
+                <mat-card-header>
+                  <div mat-card-avatar class="example-header-image"></div>
+                  <mat-card-title>{{ player2pairs.key }} : {{ player2pairs.value }} pairs</mat-card-title>
+                </mat-card-header>
+            </mat-card>
         </div>
     </div>
+
 
     <div>{{ currentPlayer.name}}'s turn</div>
 
-    <div 
-        fxLayout="column"
-        fxLayoutAlign="start"
-        fxLayoutGap="10px">
-        <div 
-            *ngFor="let cardsRow of grid; index as i;"
-            fxLayout="row"
-            fxLayoutAlign="start center"
-            fxLayoutGap="10px" >
-            <div 
-                *ngFor="let card of cardsRow"
-                (click)="selectCard(card)"
-                 [style.background-color]="card.color"
-                 style="cursor: pointer"
-                 >
-                 
-                {{ card.color }} {{ card._foundPair  ? "Found pair" : "Not found" }}
+    <hr>
+
+
+    <div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="10px">
+        <div *ngFor="let cardsRow of grid; index as i;" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+            <app-card *ngFor="let card of cardsRow" (click)="selectCard(card)" [card]="card"></app-card>
         </div>
+
     </div>
-    
-    </div>
-</div>  
+</div>
