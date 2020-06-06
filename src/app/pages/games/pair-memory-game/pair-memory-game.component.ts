@@ -97,22 +97,24 @@ export class PairMemoryGameComponent implements OnInit, OnDestroy {
 
     if (this.firstCardPick) {
       this.secondCardPick = card;
-      this.checkMatch(this.firstCardPick, this.secondCardPick);
-      this.nextTurn();
+      const pairFound = this.checkMatch(this.firstCardPick, this.secondCardPick);
+      this.nextTurn(pairFound);
     } else {
      this.firstCardPick = card; 
     }
     
   }
 
-  private checkMatch(firstPick: Card, secondPick: Card) {
+  private checkMatch(firstPick: Card, secondPick: Card): boolean {
     console.log(firstPick)
     if (firstPick.color == secondPick.color) {
       this.firstCardPick.foundPair = true
       this.secondCardPick.foundPair = true
       this.playerToPairsFound[this.currentPlayer.name] += 1
-
+      return true
     } 
+
+    return false
   }
 
   private resetPicks() {
@@ -122,18 +124,27 @@ export class PairMemoryGameComponent implements OnInit, OnDestroy {
     this.secondCardPick = null;
   }
 
-  private nextTurn() {
+  private nextTurn(pairFound: boolean) {
     let cardsLeft = this.cards.filter((card: Card) => !card.foundPair);
+    console.log(cardsLeft)
     if (cardsLeft.length == 0) {
       this.endGame()
     }
     
-    // Timeout to see the second card before it flips back
-    const secondImgTimeout = 2000;
-    setTimeout(() => {
+    // If pair not found, flip cards and other player's turn to play
+    if (pairFound) {
       this.resetPicks();
-      this.currentPlayer = this.players.filter(p => this.currentPlayer.name != p.name)[0]
-    }, secondImgTimeout)
+    } else {
+      // Timeout to see the second card before it flips back
+      const secondImgTimeout = 2000;
+      setTimeout(() => {
+        this.resetPicks();
+        this.currentPlayer = this.players.filter(p => this.currentPlayer.name != p.name)[0]
+      }, secondImgTimeout)
+    }
+
+    
+
 
   }
 

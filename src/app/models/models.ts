@@ -41,3 +41,11 @@ export class Player {
 }
 
 
+export interface QuizQuestion {
+    question: string;
+    choices: any[];
+    answer: number;
+}
+
+
+

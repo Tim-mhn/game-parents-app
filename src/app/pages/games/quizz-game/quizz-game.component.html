@@ -1,0 +1,43 @@
+<div>
+    <div fxLayout="row" fxLayoutAlign="space-evenly start ">
+        <div fxLayout="column" *ngFor="let playerPoint of playerToPoints | keyvalue ">
+            <mat-card class="example-card">
+                <mat-card-header>
+                    <div mat-card-avatar class="example-header-image"></div>
+                    <mat-card-title> {{ playerPoint.key }} {{ playerPoint.value}} </mat-card-title>
+                </mat-card-header>
+            </mat-card>
+        </div>
+    </div>
+
+
+
+    <hr>
+
+
+    <div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="10px">
+        <!-- <div *ngFor="let cardsRow of grid; index as i;" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+            <app-card *ngFor="let card of cardsRow" (click)="selectCard(card)" [card]="card"></app-card>
+        </div> -->
+        <ng-template [ngIf]="currentQuestion">
+        <countdown #cd [config]=" {leftTime: timeToAnswer/1000 }"></countdown>
+
+        <mat-card>
+            <mat-card-header>
+                <div mat-card-avatar class="example-header-image"></div>
+                <mat-card-title>{{ currentQuestion.question }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p>
+                    bla bla bla ...
+                </p>
+
+                <mat-chip-list>
+                    <mat-chip *ngFor="let choice of currentQuestion.choices; index as i" color="primary"> {{ choice }} </mat-chip>
+                </mat-chip-list>
+            </mat-card-content>
+        </mat-card>
+    </ng-template>
+
+    </div>
+</div>
