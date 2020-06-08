@@ -21,7 +21,7 @@ export class PairMemoryGameComponent implements OnInit, OnDestroy {
   public grid;
   public playerToPairsFound = {}
   public players: Player[];
-
+  private cardsFlipping = false;
   private subs: Subscription = new Subscription();
 
   constructor(private playerService: PlayerService,
@@ -84,12 +84,16 @@ export class PairMemoryGameComponent implements OnInit, OnDestroy {
   }
 
   public selectCard(card: Card) {
-    console.log("select card called !")
 
     // Handle errors : card already selected or pair already found 
     if (card.selected || card.foundPair) {
       let message = card.foundPair ? "Pair already found" : "Card already selected"
       this.openSnackBar(message);
+      return
+    }
+
+    else if (this.cardsFlipping) {
+      this.openSnackBar("Wait until cards have flipped")
       return
     }
 
@@ -137,9 +141,11 @@ export class PairMemoryGameComponent implements OnInit, OnDestroy {
     } else {
       // Timeout to see the second card before it flips back
       const secondImgTimeout = 2000;
+      this.cardsFlipping = true;
       setTimeout(() => {
         this.resetPicks();
-        this.currentPlayer = this.players.filter(p => this.currentPlayer.name != p.name)[0]
+        this.currentPlayer = this.players.filter(p => this.currentPlayer.name != p.name)[0];
+        this.cardsFlipping = false;
       }, secondImgTimeout)
     }
 

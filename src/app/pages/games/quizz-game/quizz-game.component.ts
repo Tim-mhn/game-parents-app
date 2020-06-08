@@ -74,7 +74,6 @@ export class QuizzGameComponent implements OnInit {
       console.log(this.currentQuestion)
       if (this.currentQuestion) {
         if (q.question != 'End of quiz') this.countdown.restart()
-        console.log(this.questionToAnswerHistory[i-1])
         Object.entries(this.questionToAnswerHistory[i-1]).forEach(v => {
           let [player, answer] = v
           if (answer == this.currentQuestion.answer) this.playerToPoints[player] += 1;
