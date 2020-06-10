@@ -1,43 +1,74 @@
-<div>
-    <div fxLayout="row" fxLayoutAlign="space-evenly start ">
+<div style="width: 100%">
+
+    <div fxLayout="row" fxLayoutAlign="center center">
+        <h1>Quiz Game</h1>
+    </div>
+
+
+    <div fxLayout="row" fxLayoutAlign="space-between start ">
         <div fxLayout="column" *ngFor="let playerPoint of playerToPoints | keyvalue ">
             <mat-card class="example-card">
                 <mat-card-header>
                     <div mat-card-avatar class="example-header-image"></div>
-                    <mat-card-title> {{ playerPoint.key }} {{ playerPoint.value}} </mat-card-title>
+                    <mat-card-title> {{ playerPoint.key }}: {{ playerPoint.value}} points</mat-card-title>
                 </mat-card-header>
+                <mat-card-content>
+                    <br>
+                    <h3>Commands:</h3>
+                    <p>Use <b>{{ playerToKeys[playerPoint.key][0]}}</b> and <b>{{ playerToKeys[playerPoint.key][1]}}</b>
+                        to select answers</p>
+                </mat-card-content>
             </mat-card>
         </div>
     </div>
 
 
 
-    <hr>
 
+    <br>
 
     <div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="10px">
-        <!-- <div *ngFor="let cardsRow of grid; index as i;" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-            <app-card *ngFor="let card of cardsRow" (click)="selectCard(card)" [card]="card"></app-card>
-        </div> -->
-        <ng-template [ngIf]="currentQuestion">
-        <countdown #cd [config]=" {leftTime: timeToAnswer/1000 }"></countdown>
+        <div fxLayout="row" fxLayoutAlign="center">
+            <span class="dot">
+                <countdown #cd [config]="{leftTime: timeToStart/1000, demand: true, format: 's'}"></countdown>
+            </span>
+        </div>
 
-        <mat-card>
-            <mat-card-header>
-                <div mat-card-avatar class="example-header-image"></div>
-                <mat-card-title>{{ currentQuestion.question }}</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <p>
-                    bla bla bla ...
-                </p>
 
-                <mat-chip-list>
-                    <mat-chip *ngFor="let choice of currentQuestion.choices; index as i" color="primary"> {{ choice }} </mat-chip>
-                </mat-chip-list>
-            </mat-card-content>
-        </mat-card>
-    </ng-template>
+        <ng-container *ngIf="gameStarted; else homeGame">
+
+            <ng-template [ngIf]="currentQuestion">
+
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title>{{ currentQuestion.question }}</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p>
+                            bla bla bla ...
+                        </p>
+
+                        <mat-chip-list>
+                            <div fxLayout="row" fxLayoutAlign="space-between center" class="full-width">
+                                <mat-chip style='padding-right: 16px;'
+                                    *ngFor="let choice of currentQuestion.choices; index as i" color="primary">
+                                    {{ choice }} </mat-chip>
+                            </div>
+                        </mat-chip-list>
+                    </mat-card-content>
+                </mat-card>
+            </ng-template>
+        </ng-container>
+
 
     </div>
 </div>
+
+
+
+<!-- Templates -->
+
+<ng-template #homeGame>
+    <br>
+    <button mat-stroked-button color="primary" (click)="startQuiz()">Start </button>
+</ng-template>

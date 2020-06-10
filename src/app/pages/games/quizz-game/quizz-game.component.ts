@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { PlayerService } from 'src/app/services/player.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription, zip, of, timer, from } from 'rxjs';
@@ -16,8 +16,8 @@ import { CountdownComponent } from 'ngx-countdown';
 })
 export class QuizzGameComponent implements OnInit {
 
-  @ViewChild('cd', { static: false }) private countdown: CountdownComponent;
-  
+  @ViewChild('cd', {static: false }) private countdown: CountdownComponent;
+
   public players: Player[];
   private subs: Subscription = new Subscription();
 
@@ -26,8 +26,12 @@ export class QuizzGameComponent implements OnInit {
 
   public questionToAnswerHistory: {} = {};
   public playerToPoints = {}
+  public playerToKeys = {}
+  public gameStarted = false;
 
+  public playerKeys = [["a", "e"], ["1", "3"]];
   public timeToAnswer = 5000;
+  public timeToStart = 3000; // 3..2..1 before starting 
   constructor(private playerService: PlayerService,
               private _snackBar: MatSnackBar) { }
 
@@ -36,17 +40,18 @@ export class QuizzGameComponent implements OnInit {
     this.subs.add(
       this.playerService.playersObs.subscribe((players: Player[]) => {
         this.players = players
-        players.forEach(p => this.playerToPoints[p.name] = 0); // Initialize players points to 0
+        players.forEach((p, i) => { 
+          this.playerToPoints[p.name] = 0;
+          this.playerToKeys[p.name] = i == 0 ? ["a", "e"] : ["1", "3"]
+        }); // Initialize players points to 0
       })
     )
 
     this.quizQuestions = this.getQuizQuestions();
     
     // TODO: replace this by a start quiz action button 
-    // setTimeout( () => this.startQuiz, 100);
-    this.startQuiz()
+    
   }
-
 
 
   private getQuizQuestions(): QuizQuestion[] {
@@ -62,26 +67,37 @@ export class QuizzGameComponent implements OnInit {
     return quizQuestions;
   }
 
-  private startQuiz(): void {
+  public startQuiz(): void {
+
+    this.gameStarted = true;
+    this.countdown.begin() // Need to call this as config.demand = true
+    // Edit config to use countdown to show remaining time to answer questions 
+    this.countdown.config.leftTime = this.timeToAnswer / 1000
+    this.countdown.config.demand = false;
 
     const timerQuestionsObs = zip(
       from(this.quizQuestions),
-      timer(2000, this.timeToAnswer)
+      timer(this.timeToStart, this.timeToAnswer)
     )
     
     timerQuestionsObs.subscribe(([q, i]) => { 
-      console.log(q, i);
-      console.log(this.currentQuestion)
+      // Restart countdown at each question (except final one)
+      if (q.question != 'End of quiz') {
+        this.countdown.restart()
+      } else {
+        this.endQuiz()
+      }
+
+      // Check final answers for previous question and add points if correct 
       if (this.currentQuestion) {
-        if (q.question != 'End of quiz') this.countdown.restart()
         Object.entries(this.questionToAnswerHistory[i-1]).forEach(v => {
           let [player, answer] = v
           if (answer == this.currentQuestion.answer) this.playerToPoints[player] += 1;
         })
       }
 
-      
-      if (q) this.currentQuestion = q;
+      // New current question
+      this.currentQuestion = q;
       this.questionToAnswerHistory[i] = {}
 
     });
@@ -103,11 +119,10 @@ export class QuizzGameComponent implements OnInit {
       answeringPlayer = this.players[1]
       answer = player1keys.indexOf(key)  
     } else {
-      console.log("key is not in arrays " + key)
+      console.warn("key is not in arrays " + key)
       return 
     }
 
-    console.log(answeringPlayer, answer)
 
 
     this.playerAnswers(answeringPlayer, answer)
@@ -115,15 +130,17 @@ export class QuizzGameComponent implements OnInit {
 
   private playerAnswers(player: Player, answer: number) {
     const currentQuestionIndex = this.quizQuestions.indexOf(this.currentQuestion);
-    console.log(this.questionToAnswerHistory)
-    console.log(currentQuestionIndex)
+    // Instead of directly adding point, we let the player change his answer until countdown is over
+    // In the timerQuestionsObs subscription callback, we check players answers and add points if correct 
     this.questionToAnswerHistory[currentQuestionIndex][player.name] = answer;
-    // if (answer == this.currentQuestion.answer) {
-    //   this.playerToPoints[player.name] += 1
-    // }
     this._snackBar.open(player.name + " answered to question " + currentQuestionIndex.toString() + "  : answer", "Dismiss", {
       duration: 500 // ms
     });
+  }
+
+  private endQuiz() {
+    let winner = this.players.reduce((best, current) => (this.playerToPoints[best.name] > this.playerToPoints[current.name]) ? best : current)
+    this._snackBar.open("Winner is " + winner.name + " with " + this.playerToPoints[winner.name] + " points !")
   }
 
 }

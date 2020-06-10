@@ -12,6 +12,7 @@ import { QuizzGameComponent } from './pages/games/quizz-game/quizz-game.componen
 import { RouterModule } from '@angular/router';
 import {MatChipsModule} from '@angular/material/chips';
 import { CountdownModule } from 'ngx-countdown';
+import {MatButtonModule} from '@angular/material/button';
 
 
 
@@ -30,6 +31,7 @@ import { CountdownModule } from 'ngx-countdown';
     MatCardModule,
     MatSnackBarModule,
     MatChipsModule,
+    MatButtonModule,
     CountdownModule,
     RouterModule.forRoot([
       { path: 'pair-memory-game', component: PairMemoryGameComponent },
