@@ -13,6 +13,7 @@ import { RouterModule } from '@angular/router';
 import {MatChipsModule} from '@angular/material/chips';
 import { CountdownModule } from 'ngx-countdown';
 import {MatButtonModule} from '@angular/material/button';
+import { FindWallyGameComponent } from './pages/games/find-wally-game/find-wally-game.component';
 
 
 
@@ -21,7 +22,8 @@ import {MatButtonModule} from '@angular/material/button';
     AppComponent,
     PairMemoryGameComponent,
     CardComponent,
-    QuizzGameComponent
+    QuizzGameComponent,
+    FindWallyGameComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +37,8 @@ import {MatButtonModule} from '@angular/material/button';
     CountdownModule,
     RouterModule.forRoot([
       { path: 'pair-memory-game', component: PairMemoryGameComponent },
-      { path: 'quizz-game', component: QuizzGameComponent }
+      { path: 'quizz-game', component: QuizzGameComponent },
+      { path: 'find-wally-game', component: FindWallyGameComponent }
 
     ])
   ],
