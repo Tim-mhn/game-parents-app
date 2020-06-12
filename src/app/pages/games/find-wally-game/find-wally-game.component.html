@@ -1,13 +1,29 @@
 <div>
-    <div fxLayout="row" class="relative-anchor">
-        <div fxLayout="row">
-            <img [id]="currentWaldoImage.imageName" [src]="'assets/' + currentWaldoImage.imageName + '.png'">
+    <div fxLayout="column" fxLayoutAlign="start center">
+        <div fxLayout="row" fxLayoutAlign="center">
+            <span class="dot">
+                <countdown #cd [config]="{leftTime: timeToStart/1000, demand: true, format: 's'}"></countdown>
+            </span>
         </div>
-        <div 
+        <br>
+        <ng-container *ngIf="gameStarted; else homeGame">
+            <div fxLayout="row">
+                <img [id]="currentWaldoImage.imageName" [src]="'assets/' + currentWaldoImage.imageName + '.png'">
+            </div>
+    </ng-container>
+        <!-- <div 
         class="rectangle" 
-        [ngStyle]="currentWaldoImage.hint"></div>
+        [ngStyle]="currentWaldoImage.hint"></div> -->
     </div>
 
 
 
 </div>
+
+
+<!-- Templates -->
+
+<ng-template #homeGame>
+    <br>
+    <button mat-stroked-button color="primary" (click)="startGame()">Start </button>
+</ng-template>

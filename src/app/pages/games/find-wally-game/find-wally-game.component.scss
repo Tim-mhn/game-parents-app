@@ -10,3 +10,16 @@
 .relative-anchor {
     position: relative
 }
+
+.dot {
+    height: 100px;
+    width: 100px;
+    background-color: transparent;
+    border-radius: 50%;
+    border: 4px solid lightsalmon;
+    display: inline-block;
+    line-height: 90px;
+    text-align: center;
+    font-size: 2em;
+    color: lightsalmon
+  }
