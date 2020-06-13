@@ -16,18 +16,21 @@ export class FindWallyGameComponent implements OnInit {
   public waldoImageList: WaldoImage[] = [
     {
       imageName: "papouille_waldo",
+      character: "Papouille",
       hint: { top: '60px', left: '800px', height: '500px', width: '400px' },
       hitbox: { x1: 1072, x2: 1131, y1: 154, y2: 213 }
     },
     {
       imageName: "clara_waldo",
+      character: "Clara",
       hint: { top: '60px', left: '800px', height: '500px', width: '400px' },
-      hitbox: { x1: 60, x2: 70, y1: 170, y2: 220 }
+      hitbox: { x1: 417, x2: 434, y1: 121, y2: 149}
     },
     {
       imageName: "tim_waldo",
+      character: "Tim",
       hint: { top: '60px', left: '200px', height: '100px', width: '80px' },
-      hitbox: { x1: 60, x2: 70, y1: 170, y2: 220 }
+      hitbox: { x1: 764, x2: 791, y1: 243, y2: 281 }
     }
   ]
 
@@ -75,8 +78,8 @@ export class FindWallyGameComponent implements OnInit {
       console.log(x, y)
       if (this.clickIsInBox(x, y, this.currentWaldoImage.hitbox)) {
         console.log('found')
-        this._snackbar.open('Youve found him !', 'Dismiss')
-        setTimeout(() => this._nextImage(), 3000);
+        this._snackbar.open(`You've found ${this.currentWaldoImage.character} !`, 'Dismiss')
+        // setTimeout(() => this._nextImage(), 3000);
       }
     } catch (Exception) {
       console.log(Exception.message)
