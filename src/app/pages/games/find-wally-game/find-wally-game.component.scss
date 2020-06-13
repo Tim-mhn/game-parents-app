@@ -23,3 +23,14 @@
     font-size: 2em;
     color: lightsalmon
   }
+
+::ng-deep .success {
+    background-color: green;
+    color: white
+
+}
+
+::ng-deep .info {
+    background-color: goldenrod;
+    color: white;
+}

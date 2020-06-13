@@ -50,7 +50,7 @@ export interface QuizQuestion {
 export interface WaldoImage {
     imageName: string;
     character: string;
-    hint: { top: string, left: string, height: string, width: string };
+    hintBox: { x1: number, x2: number, y1: number, y2: number };
     hitbox: { x1: number, x2: number, y1: number, y2: number };
 }
 

@@ -1,19 +1,27 @@
 <div>
     <div fxLayout="column" fxLayoutAlign="start center">
-        <div fxLayout="row" fxLayoutAlign="center">
+        <div fxLayout="row" fxLayoutAlign="center" hidden=True id="countdown-container">
             <span class="dot">
-                <countdown #cd [config]="{leftTime: timeToStart/1000, demand: true, format: 's'}"></countdown>
+                <countdown 
+                    #cd 
+                    [config]="{leftTime: timeToStart/1000, demand: true, format: 's'}"
+                    (event)="onCountdownEvent($event)"
+                    >
+                </countdown>
             </span>
         </div>
+
         <br>
         <ng-container *ngIf="gameStarted; else homeGame">
-            <div fxLayout="row">
-                <ng-container *ngIf="currentWaldoImage"><img [id]="currentWaldoImage.imageName" [src]="'assets/' + currentWaldoImage.imageName + '.png'"></ng-container>
+            <ng-container *ngIf="currentWaldoImage">
+            <div fxLayout="row" fxLayoutAlign="center center">
+                <h2>Find {{ currentWaldoImage.character}} !</h2>
             </div>
+            <div fxLayout="row">
+                <img [id]="currentWaldoImage.imageName" [src]="'assets/' + currentWaldoImage.imageName + '.png'">
+            </div>
+        </ng-container>
     </ng-container>
-        <!-- <div 
-        class="rectangle" 
-        [ngStyle]="currentWaldoImage.hint"></div> -->
     </div>
 
 
@@ -24,6 +32,17 @@
 <!-- Templates -->
 
 <ng-template #homeGame>
-    <br>
-    <button mat-stroked-button color="primary" (click)="startGame()">Start </button>
+    <div fxLayout="column" fxLayoutAlign="start start">
+    <h2>Game explanations:</h2>
+    <h3>Time to play together !</h3>
+    <h3>You will have a series of images filled with people or animals</h3>
+    <h3>For each image, you will have {{timeToFind/1000}}s to find the mentionned character by clicking on it. </h3> 
+    <h3>Work together: one person using the mouse and both of you looking for the character in the image</h3>
+    <h3>Once you've found the character, a new image will pop up. 
+        If you can't find the character within the {{timeToFind/1000}}s, we will go the next image and come back to the image later on.
+    </h3>
+    <h3>When you're ready, click on Start !</h3>
+    </div>
+    <br>    
+    <button mat-stroked-button color="primary" (click)="startGame()" style="width: 100%;">Start </button>
 </ng-template>

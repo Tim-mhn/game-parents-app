@@ -16,6 +16,8 @@ import {MatButtonModule} from '@angular/material/button';
 import { FindWallyGameComponent } from './pages/games/find-wally-game/find-wally-game.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
+import {MatDialogModule} from '@angular/material/dialog';
+import { DialogElementComponent } from './shared/dialog-element/dialog-element.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,8 @@ import { MatIconModule } from '@angular/material/icon';
     PairMemoryGameComponent,
     CardComponent,
     QuizzGameComponent,
-    FindWallyGameComponent
+    FindWallyGameComponent,
+    DialogElementComponent
   ],
   imports: [
     BrowserModule,
@@ -37,6 +40,7 @@ import { MatIconModule } from '@angular/material/icon';
     CountdownModule,
     MatToolbarModule,
     MatIconModule,
+    MatDialogModule,
     RouterModule.forRoot([
       { path: 'pair-memory-game', component: PairMemoryGameComponent },
       { path: 'quizz-game', component: QuizzGameComponent },
