@@ -38,21 +38,28 @@ export class Player {
     constructor (name) {
         this.name = name
     }
+
+    addPoints(pts) {
+        this.points += pts;
+    }
 }
 
 
-export interface QuizQuestion {
+export interface IQuizQuestion {
     question: string;
     choices: any[];
     answer: number;
 }
 
-export interface WaldoImage {
+export interface IWaldoImage {
     imageName: string;
     character: string;
     hintBox: { x1: number, x2: number, y1: number, y2: number };
     hitbox: { x1: number, x2: number, y1: number, y2: number };
 }
+
+
+
 
 
 

@@ -1,0 +1,69 @@
+<div fxLayout="column" fxLayoutAlign="start start">
+    <div fxLayout="column" fxLayoutAlign=" start start">
+        <h2>Welcome to the game !</h2>
+        <p>In show dull give need so held. One order all scale sense her gay style wrote.
+            Incommode our not one ourselves residence. Shall there whose those stand she end.
+            So unaffected partiality indulgence dispatched to of celebrated remarkably.
+            Unfeeling are had allowance own perceived abilities. </p>
+
+        <p>
+            Over fact all son tell this any his. No insisted confined of weddings to returned to debating rendered.
+            Keeps order fully so do party means young. Table nay him jokes quick. In felicity up to graceful mistaken
+            horrible consider.
+            bode never think to at. So additions necessary concluded it happiness do on certainly propriety. On in green
+            taken do offer witty of.
+        </p>
+
+        <p>
+            At ourselves direction believing do he departure.
+            Celebrated her had sentiments understood are projection set. Possession ye no mr unaffected remarkably at.
+            Wrote house in never fruit up. Pasture imagine my garrets an he. However distant she request behaved see
+            nothing. Talking settled at pleased an of me brother weather.
+        </p>
+    </div>
+
+    <div fxLayout="column" fxFill>
+        <ng-container *ngTemplateOutlet="players ? leaderboard : form"></ng-container>
+    </div>
+</div>
+
+
+<!-- Templates -->
+
+<!-- PLAYERS FORM -->
+<ng-template #form>
+    <h3>Enter your player usernames !</h3>
+    <form  fxLayout="column" fxFill [formGroup]="playersForm" (ngSubmit)="onSubmit()">
+        <div fxLayout="row" fxLAyoutAlign="center center">
+            <mat-form-field appearance="outline">
+                <mat-label>Player 1</mat-label>
+                <input type="text" matInput placeholder="Player 1" required formControlName="playerOne">
+                <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+            </mat-form-field>
+
+            <span fxFlex></span>
+            <mat-form-field appearance="outline">
+                <mat-label>Player 2</mat-label>
+                <input matInput placeholder="Player 2" required formControlName="playerTwo">
+                <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+            </mat-form-field>
+        </div>
+
+        <button mat-stroked-button color="primary" type="submit" [disabled]="!playersForm.valid">Submit</button>
+
+
+    </form>
+
+</ng-template>
+
+
+<!-- LEADERBOARD -->
+<ng-template #leaderboard>
+    <h2>Leaderboard</h2>
+    <div fxLayout="row" fxLAyoutAlign="space-around center">
+        <div *ngFor="let player of players">
+            {{player.name}} : {{player.points }}
+        </div>
+    </div>
+    <a mat-raised-button color="accent" [routerLink]="btnRoute" routerLinkActive="active">{{ btnText }}</a>
+</ng-template>

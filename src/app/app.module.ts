@@ -18,7 +18,10 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import {MatDialogModule} from '@angular/material/dialog';
 import { DialogElementComponent } from './shared/dialog-element/dialog-element.component';
-
+import { HomeComponent } from './pages/home/home.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,7 +29,8 @@ import { DialogElementComponent } from './shared/dialog-element/dialog-element.c
     CardComponent,
     QuizzGameComponent,
     FindWallyGameComponent,
-    DialogElementComponent
+    DialogElementComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -34,6 +38,7 @@ import { DialogElementComponent } from './shared/dialog-element/dialog-element.c
     FlexLayoutModule,
     BrowserAnimationsModule,
     MatCardModule,
+    ReactiveFormsModule,
     MatSnackBarModule,
     MatChipsModule,
     MatButtonModule,
@@ -41,7 +46,10 @@ import { DialogElementComponent } from './shared/dialog-element/dialog-element.c
     MatToolbarModule,
     MatIconModule,
     MatDialogModule,
+    MatInputModule,
+    MatFormFieldModule,
     RouterModule.forRoot([
+      { path: 'home', component: HomeComponent },
       { path: 'pair-memory-game', component: PairMemoryGameComponent },
       { path: 'quizz-game', component: QuizzGameComponent },
       { path: 'find-wally-game', component: FindWallyGameComponent }

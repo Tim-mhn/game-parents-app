@@ -13,12 +13,12 @@
 
         <br>
         <ng-container *ngIf="gameStarted; else homeGame">
-            <ng-container *ngIf="currentWaldoImage">
+            <ng-container *ngIf="currentIWaldoImage">
             <div fxLayout="row" fxLayoutAlign="center center">
-                <h2>Find {{ currentWaldoImage.character}} !</h2>
+                <h2>Find {{ currentIWaldoImage.character}} !</h2>
             </div>
             <div fxLayout="row">
-                <img [id]="currentWaldoImage.imageName" [src]="'assets/' + currentWaldoImage.imageName + '.png'">
+                <img [id]="currentIWaldoImage.imageName" [src]="'assets/' + currentIWaldoImage.imageName + '.png'">
             </div>
         </ng-container>
     </ng-container>

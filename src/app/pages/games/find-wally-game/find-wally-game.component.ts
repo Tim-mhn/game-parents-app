@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { WaldoImage } from 'src/app/models/models';
+import { IWaldoImage } from 'src/app/models/models';
 import { CountdownComponent, CountdownEvent } from 'ngx-countdown';
 import { Subscription, zip, of, timer, from, merge, BehaviorSubject, ReplaySubject } from 'rxjs';
 import { EventEmitter } from 'events';
@@ -17,7 +17,7 @@ import { DialogElementComponent } from 'src/app/shared/dialog-element/dialog-ele
 export class FindWallyGameComponent implements OnInit {
   @ViewChild('cd', { static: false }) public countdown: CountdownComponent;
 
-  public waldoImageList: WaldoImage[] = [
+  public waldoImageList: IWaldoImage[] = [
     {
       imageName: "papouille_waldo",
       character: "Papouille",
@@ -56,7 +56,7 @@ export class FindWallyGameComponent implements OnInit {
     }
   ]
 
-  public currentWaldoImage: WaldoImage;
+  public currentIWaldoImage: IWaldoImage;
   public gameStarted = false;
   public timeToFind = 45000; // ms
   public timeToStart = 5000;
@@ -68,13 +68,13 @@ export class FindWallyGameComponent implements OnInit {
               private _dialog: MatDialog) { }
 
   ngOnInit(): void {
-    // this.currentWaldoImage = this.waldoImageList[0]
+    // this.currentIWaldoImage = this.waldoImageList[0]
 
   }
 
   private _nextImage() {
-    let nextIdx = this.waldoImageList.indexOf(this.currentWaldoImage) + 1;
-    this.currentWaldoImage = this.waldoImageList[nextIdx];
+    let nextIdx = this.waldoImageList.indexOf(this.currentIWaldoImage) + 1;
+    this.currentIWaldoImage = this.waldoImageList[nextIdx];
   }
 
   public startGame() {
@@ -90,7 +90,7 @@ export class FindWallyGameComponent implements OnInit {
     imageSequenceObs.subscribe((msg: string) => {
       
       
-      if (msg == "done" && this.currentWaldoImage) this.waldoImageList.push(this.currentWaldoImage)
+      if (msg == "done" && this.currentIWaldoImage) this.waldoImageList.push(this.currentIWaldoImage)
 
       console.log(this.waldoImageList)
       if (this.waldoImageList.length==0) {
@@ -98,7 +98,7 @@ export class FindWallyGameComponent implements OnInit {
         return
       } 
 
-      this.currentWaldoImage = this.waldoImageList.shift()
+      this.currentIWaldoImage = this.waldoImageList.shift()
       setTimeout(() => this.countdown.restart()) // Need to use settimeout otherwise cd is just reset but doesn't start 
     })
 
@@ -112,13 +112,13 @@ export class FindWallyGameComponent implements OnInit {
   @HostListener('document:click', ['$event', '$event.target'])
   public onClick(event: MouseEvent, targetElement: HTMLElement) {
     try {
-      var img = document.getElementById(this.currentWaldoImage.imageName);
+      var img = document.getElementById(this.currentIWaldoImage.imageName);
       let x = event.pageX - img.offsetLeft
       let y = event.pageY - img.offsetTop
       console.log(x, y)
-      if (this.clickIsInBox(x, y, this.currentWaldoImage.hitbox)) {
+      if (this.clickIsInBox(x, y, this.currentIWaldoImage.hitbox)) {
         this._findImage()
-      } else if (this.clickIsInBox(x, y, this.currentWaldoImage.hintBox)) {
+      } else if (this.clickIsInBox(x, y, this.currentIWaldoImage.hintBox)) {
         this._closeToImage()
       }
     } catch (Exception) {
@@ -134,7 +134,7 @@ export class FindWallyGameComponent implements OnInit {
     
   }
   private _findImage() {
-    this._snackbar.open(`You've found ${this.currentWaldoImage.character} !`, 'Dismiss', {
+    this._snackbar.open(`You've found ${this.currentIWaldoImage.character} !`, 'Dismiss', {
       duration: 1500, // ms
       panelClass: "success"
     })

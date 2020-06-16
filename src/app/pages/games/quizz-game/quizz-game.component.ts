@@ -3,7 +3,7 @@ import { PlayerService } from 'src/app/services/player.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription, zip, of, timer, from } from 'rxjs';
 import { endWith, delay } from 'rxjs/operators';
-import { Player, QuizQuestion } from 'src/app/models/models';
+import { Player, IQuizQuestion } from 'src/app/models/models';
 import _ from "lodash";
 import { strict } from 'assert';
 import { pipeFromArray } from 'rxjs/internal/util/pipe';
@@ -21,11 +21,11 @@ export class QuizzGameComponent implements OnInit {
   public players: Player[];
   private subs: Subscription = new Subscription();
 
-  private quizQuestions: QuizQuestion[];
-  public currentQuestion: QuizQuestion;
+  private IQuizQuestions: IQuizQuestion[];
+  public currentQuestion: IQuizQuestion;
 
   public questionToAnswerHistory: {} = {};
-  public playerToPoints = {}
+  public playerToPoints = {};
   public playerToKeys = {}
   public gameStarted = false;
 
@@ -40,31 +40,31 @@ export class QuizzGameComponent implements OnInit {
     this.subs.add(
       this.playerService.playersObs.subscribe((players: Player[]) => {
         this.players = players
-        players.forEach((p, i) => { 
+        console.log(this.players)
+        players.forEach((p, i) => {
           this.playerToPoints[p.name] = 0;
           this.playerToKeys[p.name] = i == 0 ? ["a", "e"] : ["1", "3"]
+          console.log(this.playerToPoints)
         }); // Initialize players points to 0
       })
     )
 
-    this.quizQuestions = this.getQuizQuestions();
-    
+    this.IQuizQuestions = this.getIQuizQuestions();
     // TODO: replace this by a start quiz action button 
-    
   }
 
 
-  private getQuizQuestions(): QuizQuestion[] {
-    let quizQuestions: QuizQuestion[] = []
+  private getIQuizQuestions(): IQuizQuestion[] {
+    let IQuizQuestions: IQuizQuestion[] = []
 
-    quizQuestions.push( { question: 'Capital of France ? ', choices: ['Paris', 'Marseille'], 'answer': 0 })
-    quizQuestions.push( { question: 'Most populated city ? ', choices: ['Tokyo', 'Delhi'], 'answer': 0 })
-    quizQuestions.push( { question: 'Smallest country ?', choices: ['San Marino', 'Vatican'], 'answer': 1 })
-    quizQuestions.push( { question: 'Nationality of Chopin ?', choices: ['Polish', 'Hungarian'], 'answer': 0 })
-    quizQuestions.push( { question: 'Capital of Washington State', choices: ['Seattle', 'Olympia'], 'answer': 1 })
-    quizQuestions.push( { question: 'Highest army budget per capita ?', choices: ['Israel', 'Saudi Arabia'], 'answer': 1 })
-    quizQuestions.push({ question: 'End of quiz', choices: [], answer: 0 })
-    return quizQuestions;
+    IQuizQuestions.push( { question: 'Capital of France ? ', choices: ['Paris', 'Marseille'], 'answer': 0 })
+    IQuizQuestions.push( { question: 'Most populated city ? ', choices: ['Tokyo', 'Delhi'], 'answer': 0 })
+    IQuizQuestions.push( { question: 'Smallest country ?', choices: ['San Marino', 'Vatican'], 'answer': 1 })
+    IQuizQuestions.push( { question: 'Nationality of Chopin ?', choices: ['Polish', 'Hungarian'], 'answer': 0 })
+    IQuizQuestions.push( { question: 'Capital of Washington State', choices: ['Seattle', 'Olympia'], 'answer': 1 })
+    IQuizQuestions.push( { question: 'Highest army budget per capita ?', choices: ['Israel', 'Saudi Arabia'], 'answer': 1 })
+    IQuizQuestions.push({ question: 'End of quiz', choices: [], answer: 0 })
+    return IQuizQuestions;
   }
 
   public startQuiz(): void {
@@ -76,7 +76,7 @@ export class QuizzGameComponent implements OnInit {
     this.countdown.config.demand = false;
 
     const timerQuestionsObs = zip(
-      from(this.quizQuestions),
+      from(this.IQuizQuestions),
       timer(this.timeToStart, this.timeToAnswer)
     )
     
@@ -105,9 +105,8 @@ export class QuizzGameComponent implements OnInit {
 
 
   @HostListener('document: keydown', ['$event'])
-  private answerQuestion(event: KeyboardEvent) {
+  public answerQuestion(event: KeyboardEvent) {
     const key = event.key.toLowerCase();
-    console.log(key)
     const player0keys = ['a', 'e'];
     const player1keys = ['1', '3'];
 
@@ -129,7 +128,7 @@ export class QuizzGameComponent implements OnInit {
   }
 
   private playerAnswers(player: Player, answer: number) {
-    const currentQuestionIndex = this.quizQuestions.indexOf(this.currentQuestion);
+    const currentQuestionIndex = this.IQuizQuestions.indexOf(this.currentQuestion);
     // Instead of directly adding point, we let the player change his answer until countdown is over
     // In the timerQuestionsObs subscription callback, we check players answers and add points if correct 
     this.questionToAnswerHistory[currentQuestionIndex][player.name] = answer;
@@ -141,6 +140,8 @@ export class QuizzGameComponent implements OnInit {
   private endQuiz() {
     let winner = this.players.reduce((best, current) => (this.playerToPoints[best.name] > this.playerToPoints[current.name]) ? best : current)
     this._snackBar.open("Winner is " + winner.name + " with " + this.playerToPoints[winner.name] + " points !")
+    let playerToPoints: Map<string, number> = <Map<string, number>> this.playerToPoints
+    this.playerService.addPoints(playerToPoints);
   }
 
 }
