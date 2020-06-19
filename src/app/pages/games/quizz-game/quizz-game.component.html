@@ -58,6 +58,11 @@
                     </mat-card-content>
                 </mat-card>
             </ng-template>
+
+            <ng-template [ngIf]="gameEnded">
+                <app-leaderboard></app-leaderboard>
+                <p><a routerLink="/pair-memory-game" routerLinkActive="active">Go to the second game</a></p>
+            </ng-template>
         </ng-container>
 
 

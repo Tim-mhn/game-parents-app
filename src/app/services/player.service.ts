@@ -30,7 +30,6 @@ export class PlayerService {
         playerToAdd.addPoints(points)
     })
 
-    console.log(players)
     this._playersSubj.next(players)
    }
 }

@@ -22,6 +22,7 @@ import { HomeComponent } from './pages/home/home.component';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
+import { LeaderboardComponent } from './shared/leaderboard/leaderboard.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +31,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     QuizzGameComponent,
     FindWallyGameComponent,
     DialogElementComponent,
-    HomeComponent
+    HomeComponent,
+    LeaderboardComponent
   ],
   imports: [
     BrowserModule,

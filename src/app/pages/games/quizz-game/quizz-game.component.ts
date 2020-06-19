@@ -28,7 +28,8 @@ export class QuizzGameComponent implements OnInit {
   public playerToPoints = {};
   public playerToKeys = {}
   public gameStarted = false;
-
+  public gameEnded = false;
+  
   public playerKeys = [["a", "e"], ["1", "3"]];
   public timeToAnswer = 5000;
   public timeToStart = 3000; // 3..2..1 before starting 
@@ -142,6 +143,7 @@ export class QuizzGameComponent implements OnInit {
     this._snackBar.open("Winner is " + winner.name + " with " + this.playerToPoints[winner.name] + " points !")
     let playerToPoints: Map<string, number> = <Map<string, number>> this.playerToPoints
     this.playerService.addPoints(playerToPoints);
+    this.gameEnded = true;
   }
 
 }

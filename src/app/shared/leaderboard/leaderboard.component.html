@@ -1,0 +1,10 @@
+<!-- LEADERBOARD -->
+<div fxLayout="column">
+    <h2>Leaderboard</h2>
+    <div fxLayout="row" fxLAyoutAlign="space-around center">
+        <div *ngFor="let player of players">
+            {{player.name}} : {{player.points }}
+        </div>
+    </div>
+    <!-- <a mat-raised-button color="accent" [routerLink]="btnRoute" routerLinkActive="active">{{ btnText }}</a> -->
+</div>
