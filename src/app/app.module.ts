@@ -23,6 +23,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LeaderboardComponent } from './shared/leaderboard/leaderboard.component';
+import { OrderByPipe } from './pipes/order-by.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,7 +33,8 @@ import { LeaderboardComponent } from './shared/leaderboard/leaderboard.component
     FindWallyGameComponent,
     DialogElementComponent,
     HomeComponent,
-    LeaderboardComponent
+    LeaderboardComponent,
+    OrderByPipe
   ],
   imports: [
     BrowserModule,

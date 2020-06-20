@@ -1,12 +1,12 @@
-<div 
-    style="height: 200px; width: 200px; cursor:pointer; border-radius: 5px" 
+<div
+    style="height: 150px; width: 150px; cursor:pointer; border-radius: 5px"
     [ngClass]=" { 'card-found-pair' : card.foundPair, 'card-selected': card.selected && !card.foundPair}">
 <mat-card style="width: 100%;
                 height: 100%;
                 box-sizing: border-box;"
             class="card"
             [ngClass]=" { 'flipped': !card.selected && !card.foundPair}">
-    <img mat-card-image [src]="card.imgPath" alt="Photo of a Shiba Inu" class="front">
+    <img mat-card-image [src]="card.imgPath" alt="card.imgPath" class="front">
     <img mat-card-image class="back" src="https://opengameart.org/sites/default/files/card%20back%20black.png">
 </mat-card>
 </div>

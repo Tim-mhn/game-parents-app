@@ -1,5 +1,4 @@
 export class Card {
-    public color: string;
     public version: 0 | 1; 
     private _foundPair: boolean = false;
     public imgPath: string = "";
@@ -7,8 +6,7 @@ export class Card {
 
 
 
-    constructor(color, version, imgPath="", _foundPair=false, ) {
-        this.color = color;
+    constructor(version, imgPath="", _foundPair=false, ) {
         this.version = version;
         this.imgPath = imgPath;
         this._foundPair = _foundPair;

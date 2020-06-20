@@ -1,11 +1,11 @@
 <div style="width: 100%">
 
     <div fxLayout="row" fxLayoutAlign="center center">
-        <h1>Quiz Game</h1>
+        <h1>Quiz: Who's the most likely to ... ?</h1>
     </div>
 
 
-    <div fxLayout="row" fxLayoutAlign="space-between start ">
+    <div *ngIf="!(gameStatus==gameStatusEnum.END)" fxLayout="row" fxLayoutAlign="space-between start ">
         <div fxLayout="column" *ngFor="let playerPoint of playerToPoints | keyvalue ">
             <mat-card class="example-card">
                 <mat-card-header>
@@ -35,35 +35,50 @@
         </div>
 
 
-        <ng-container *ngIf="gameStarted; else homeGame">
+        <ng-container [ngSwitch]="gameStatus">
 
-            <ng-template [ngIf]="currentQuestion">
 
-                <mat-card>
-                    <mat-card-header>
-                        <mat-card-title>{{ currentQuestion.question }}</mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <p>
-                            bla bla bla ...
-                        </p>
-
-                        <mat-chip-list>
-                            <div fxLayout="row" fxLayoutAlign="space-between center" class="full-width">
-                                <mat-chip style='padding-right: 16px;'
-                                    *ngFor="let choice of currentQuestion.choices; index as i" color="primary">
-                                    {{ choice }} </mat-chip>
-                            </div>
-                        </mat-chip-list>
-                    </mat-card-content>
-                </mat-card>
-            </ng-template>
-
-            <ng-template [ngIf]="gameEnded">
+            <div *ngSwitchCase="gameStatusEnum.END" style="width: 100%">
                 <app-leaderboard></app-leaderboard>
                 <p><a routerLink="/pair-memory-game" routerLinkActive="active">Go to the second game</a></p>
-            </ng-template>
+            </div>
+
+
+            <div *ngSwitchCase="gameStatusEnum.PROGRESS" style="width: 100%">
+                <div *ngIf="currentQuestion">
+
+                    <mat-card>
+                        <mat-card-header>
+                            <mat-card-title>{{ currentQuestion.question }}</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p>
+                                bla bla bla ...
+                            </p>
+
+                            <mat-chip-list>
+                                <div fxLayout="row" fxLayoutAlign="space-between center" class="full-width">
+                                    <mat-chip style='padding-right: 16px;'
+                                        *ngFor="let choice of currentQuestion.choices; index as i" color="primary">
+                                        {{ choice }} </mat-chip>
+                                </div>
+                            </mat-chip-list>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+
+
+            <div *ngSwitchCase="gameStatusEnum.START" style="width: 100%">
+                <h2>Game rules</h2>
+                <p>You will be asked a list of "who's the most likely to .." questions. You will have {{ timeToAnswer/1000 }} seconds pick the right answer among the two suggestions</p>
+                <p>Select your answer with the commands detailed on top. You can change your submission until the {{ timeToAnswer/1000 }} have elapsed</p>
+                <button mat-stroked-button color="primary" (click)="startQuiz()" style="width: 100%">Start </button>
+            </div>
+
         </ng-container>
+
+
 
 
     </div>

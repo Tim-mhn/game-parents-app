@@ -8,6 +8,9 @@ import _ from "lodash";
 import { strict } from 'assert';
 import { pipeFromArray } from 'rxjs/internal/util/pipe';
 import { CountdownComponent } from 'ngx-countdown';
+import { GameStatus } from 'src/app/models/enums';
+import { DialogElementComponent } from 'src/app/shared/dialog-element/dialog-element.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-quizz-game',
@@ -27,14 +30,14 @@ export class QuizzGameComponent implements OnInit {
   public questionToAnswerHistory: {} = {};
   public playerToPoints = {};
   public playerToKeys = {}
-  public gameStarted = false;
-  public gameEnded = false;
-  
+  public gameStatus: GameStatus = GameStatus.START
+  public gameStatusEnum: typeof GameStatus = GameStatus
   public playerKeys = [["a", "e"], ["1", "3"]];
   public timeToAnswer = 5000;
   public timeToStart = 3000; // 3..2..1 before starting 
   constructor(private playerService: PlayerService,
-              private _snackBar: MatSnackBar) { }
+              private _snackBar: MatSnackBar,
+              private _dialog: MatDialog) { }
 
   ngOnInit(): void {
 
@@ -45,32 +48,39 @@ export class QuizzGameComponent implements OnInit {
         players.forEach((p, i) => {
           this.playerToPoints[p.name] = 0;
           this.playerToKeys[p.name] = i == 0 ? ["a", "e"] : ["1", "3"]
-          console.log(this.playerToPoints)
+          // console.log(this.playerToPoints)
         }); // Initialize players points to 0
       })
     )
 
     this.IQuizQuestions = this.getIQuizQuestions();
-    // TODO: replace this by a start quiz action button 
   }
 
 
   private getIQuizQuestions(): IQuizQuestion[] {
     let IQuizQuestions: IQuizQuestion[] = []
-
-    IQuizQuestions.push( { question: 'Capital of France ? ', choices: ['Paris', 'Marseille'], 'answer': 0 })
-    IQuizQuestions.push( { question: 'Most populated city ? ', choices: ['Tokyo', 'Delhi'], 'answer': 0 })
-    IQuizQuestions.push( { question: 'Smallest country ?', choices: ['San Marino', 'Vatican'], 'answer': 1 })
-    IQuizQuestions.push( { question: 'Nationality of Chopin ?', choices: ['Polish', 'Hungarian'], 'answer': 0 })
-    IQuizQuestions.push( { question: 'Capital of Washington State', choices: ['Seattle', 'Olympia'], 'answer': 1 })
-    IQuizQuestions.push( { question: 'Highest army budget per capita ?', choices: ['Israel', 'Saudi Arabia'], 'answer': 1 })
+    const baseQuestion = 'Qui est le plus susceptible de '
+    IQuizQuestions.push( { question: baseQuestion + 'ne pas se doucher pendant une semaine ?', choices: ['Clara', 'Annabel'], 'answer': 1 })
+    IQuizQuestions.push( { question: baseQuestion +'s\'énerver après avoir perdu un jeu de cartes ?', choices: ['Papa', 'Annabel'], 'answer': 0 })
+    IQuizQuestions.push( { question: baseQuestion +'dormir pendant 24h d\'affilées ?', choices: ['Tim', 'Annabel'], 'answer': 1 })
+    IQuizQuestions.push( { question: baseQuestion +'ne pas bien digérer l\'aïoli ?', choices: ['Maman', 'Clara'], 'answer': 0 })
+    IQuizQuestions.push( { question: baseQuestion +'ne pas aimer les gens gros ?', choices: ['Tim', 'Annabel'], 'answer': 0 })
+    IQuizQuestions.push( { question: baseQuestion +'être grosse ?', choices: ['Clara', 'Annabel'], 'answer': 0 })
+    IQuizQuestions.push( { question: baseQuestion +'se prendre un arbre en marchant ?', choices: ['Papouille', 'Clara'], 'answer': 1 })
+    IQuizQuestions.push( { question: baseQuestion +'faire fuir Papouille par son odeur ?', choices: ['Annabel', 'Tim'], 'answer': 0 })
+    IQuizQuestions.push( { question: baseQuestion +'chasser Papouille cruellement ?', choices: ['Tim', 'Clara'], 'answer': 0 })
+    IQuizQuestions.push( { question: baseQuestion +'jouer avec Papouille dans l\'escalier ?', choices: ['Clara', 'Papa'], 'answer': 1 })
+    IQuizQuestions.push( { question: baseQuestion +'dire "ah j\'ai un coup de bar!" ?', choices: ['Israel', 'Saudi Arabia'], 'answer': 1 })
+    IQuizQuestions.push( { question: baseQuestion +'faire une blague presque drôle ?', choices: ['Annabel', 'Papa'], 'answer': 1 })
+    IQuizQuestions.push( { question: baseQuestion +'tomber d\'une baignoire ?', choices: ['Clara', 'Maman'], 'answer': 0 })
+    IQuizQuestions.push( { question: baseQuestion +'se faire mordre les fesses par Pouille ?', choices: ['Annabel', 'Clara'], 'answer': 1 })
     IQuizQuestions.push({ question: 'End of quiz', choices: [], answer: 0 })
     return IQuizQuestions;
   }
 
   public startQuiz(): void {
 
-    this.gameStarted = true;
+    this.gameStatus = GameStatus.PROGRESS;
     this.countdown.begin() // Need to call this as config.demand = true
     // Edit config to use countdown to show remaining time to answer questions 
     this.countdown.config.leftTime = this.timeToAnswer / 1000
@@ -140,10 +150,18 @@ export class QuizzGameComponent implements OnInit {
 
   private endQuiz() {
     let winner = this.players.reduce((best, current) => (this.playerToPoints[best.name] > this.playerToPoints[current.name]) ? best : current)
-    this._snackBar.open("Winner is " + winner.name + " with " + this.playerToPoints[winner.name] + " points !")
     let playerToPoints: Map<string, number> = <Map<string, number>> this.playerToPoints
+    let winnerName = winner.name;
+    let winnerPoints = playerToPoints[winnerName]
     this.playerService.addPoints(playerToPoints);
-    this.gameEnded = true;
+    this.gameStatus = GameStatus.END
+    this._dialog.open(DialogElementComponent, {
+      data: {
+        title: "End of the game",
+        content: winnerName + " has won with " + winnerPoints + " points !",
+        closeMsg: "Close"
+      }
+    })
   }
 
 }

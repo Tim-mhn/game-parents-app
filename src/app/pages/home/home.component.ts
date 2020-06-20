@@ -27,9 +27,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.playerSub = this.playerService.playersObs.subscribe((players: Player[]) => {
       if (players.every((p) => p != null)) this.players = players;
-      console.log(players)
-      console.log((players.every((p) => p != null)))
-      console.log(this.players)
     })
   }
 

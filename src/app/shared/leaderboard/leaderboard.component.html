@@ -1,9 +1,12 @@
 <!-- LEADERBOARD -->
 <div fxLayout="column">
     <h2>Leaderboard</h2>
-    <div fxLayout="row" fxLAyoutAlign="space-around center">
-        <div *ngFor="let player of players">
-            {{player.name}} : {{player.points }}
+    <div fxLayout="row" fxLAyoutAlign="space-around space-evenly">
+        <div *ngFor="let player of players" 
+        fxLayout="column" fxLayoutAlign="center center" 
+        style="background-color: #FA8072; width: 100%; color: white; font-size: 1.2em; border-radius: 5px; margin:16px; padding: 8px 0px">
+                <p>{{player.name }}</p>
+                <p>{{player.points}} points</p>
         </div>
     </div>
     <!-- <a mat-raised-button color="accent" [routerLink]="btnRoute" routerLinkActive="active">{{ btnText }}</a> -->

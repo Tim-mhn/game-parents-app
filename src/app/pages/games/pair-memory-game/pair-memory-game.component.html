@@ -5,8 +5,8 @@
 
 
     <div fxLayout="row" fxLayoutAlign="space-between start ">
-        <div 
-            fxLayout="column" 
+        <div
+            fxLayout="column"
             *ngFor="let player2pairs of playerToPairsFound | keyvalue"
             [ngClass]="{ 'current-turn': player2pairs.key == currentPlayer.name } ">
             <mat-card class="example-card">
@@ -19,15 +19,26 @@
     </div>
 
 
-    <div>{{ currentPlayer.name}}'s turn</div>
+    <div fxLayout="row" fxLayoutAlign="center center" >
+        <h2>{{ currentPlayer.name}}'s turn</h2>
+    </div>
 
     <hr>
 
+    <div *ngIf="gameStatus != gameStatusEnum.END; else leaderboard">
+        <div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="10px">
+            <div *ngFor="let cardsRow of grid; index as i;" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+                <app-card *ngFor="let card of cardsRow" (click)="selectCard(card)" [card]="card"></app-card>
+            </div>
 
-    <div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="10px">
-        <div *ngFor="let cardsRow of grid; index as i;" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-            <app-card *ngFor="let card of cardsRow" (click)="selectCard(card)" [card]="card"></app-card>
         </div>
-
     </div>
 </div>
+
+<!-- TEMPLATES -->
+
+
+<ng-template #leaderboard>
+    <app-leaderboard></app-leaderboard>
+    <p><a routerLink="/find-wally-game" routerLinkActive="active">Go to the last game</a></p>
+</ng-template>

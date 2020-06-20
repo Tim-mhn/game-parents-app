@@ -1,24 +1,19 @@
 <div fxLayout="column" fxLayoutAlign="start start">
     <div fxLayout="column" fxLayoutAlign=" start start">
-        <h2>Welcome to the game !</h2>
-        <p>In show dull give need so held. One order all scale sense her gay style wrote.
-            Incommode our not one ourselves residence. Shall there whose those stand she end.
-            So unaffected partiality indulgence dispatched to of celebrated remarkably.
-            Unfeeling are had allowance own perceived abilities. </p>
+        <h2>Bonjour à vous! Hi there! Dia Duit! </h2>
+        <p>Cela fait maintenant presque 22 ans que vous avez mis au monde un, puis deux, puis 3 petits (mais plus trop petits quand même) monstres.
+            Vous les avez vu grandir, vous les avez fait mûrir, et maintenant il est temps pour eux de partir.
+            Mais la famille, c’est vital pour vous, et c’est une valeur que vous nous avez transmise. </p>
 
         <p>
-            Over fact all son tell this any his. No insisted confined of weddings to returned to debating rendered.
-            Keeps order fully so do party means young. Table nay him jokes quick. In felicity up to graceful mistaken
-            horrible consider.
-            bode never think to at. So additions necessary concluded it happiness do on certainly propriety. On in green
-            taken do offer witty of.
+            Alors en ce jour de fête des P….arents (oui on est comme ça nous, on change les dates il y a quoi? ihihi), 
+            on vous propose de vous replonger dans les souvenirs de notre enfance. 
+            Ah oui et, la famille, c’est important, mais on oublie pas l’esprit compet ici! 
+            C’est donc en duel que vous allez devoir accepter ce défi. 
         </p>
 
         <p>
-            At ourselves direction believing do he departure.
-            Celebrated her had sentiments understood are projection set. Possession ye no mr unaffected remarkably at.
-            Wrote house in never fruit up. Pasture imagine my garrets an he. However distant she request behaved see
-            nothing. Talking settled at pleased an of me brother weather.
+            Entrer nos noms, cliquer sur "Submit" puis "Let's start the game" et c’est parti pour la première étape du périple… "qui est le plus susceptible de" ?
         </p>
     </div>
 
@@ -59,11 +54,6 @@
 
 <!-- LEADERBOARD -->
 <ng-template #leaderboard>
-    <h2>Leaderboard</h2>
-    <div fxLayout="row" fxLAyoutAlign="space-around center">
-        <div *ngFor="let player of players">
-            {{player.name}} : {{player.points }}
-        </div>
-    </div>
+    <app-leaderboard></app-leaderboard>
     <a mat-raised-button color="accent" [routerLink]="btnRoute" routerLinkActive="active">{{ btnText }}</a>
 </ng-template>
