@@ -32,7 +32,7 @@ export class QuizzGameComponent implements OnInit {
   public playerToKeys = {}
   public gameStatus: GameStatus = GameStatus.START
   public gameStatusEnum: typeof GameStatus = GameStatus
-  public playerKeys = [["a", "e"], ["1", "3"]];
+  public playerKeys = [["a", "e"], ["ArrowLeft", "ArrowRight"]];
   public timeToAnswer = 10000;
   public timeToStart = 3000; // 3..2..1 before starting 
   constructor(private playerService: PlayerService,
@@ -46,7 +46,7 @@ export class QuizzGameComponent implements OnInit {
         this.players = players
         players.forEach((p, i) => {
           this.playerToPoints[p.name] = 0;
-          this.playerToKeys[p.name] = i == 0 ? ["a", "e"] : ["1", "3"]
+          this.playerToKeys[p.name] = i == 0 ? ["a", "e"] : ["ArrowLeft", "ArrowRight"]
         }); // Initialize players points to 0
       })
     )
@@ -117,18 +117,18 @@ export class QuizzGameComponent implements OnInit {
   public answerQuestion(event: KeyboardEvent) {
     const key = event.key.toLowerCase();
     const player0keys = ['a', 'e'];
-    const player1keys = ['1', '3'];
+    const player1keys = ['arrowleft', 'arrowright'];
 
     let answeringPlayer, answer;
     if (player0keys.includes(key)) {
       answeringPlayer = this.players[0]
-      answer = player0keys.indexOf(key)    
+      answer = player0keys.indexOf(key)
     } else if (player1keys.includes(key)) {
       answeringPlayer = this.players[1]
-      answer = player1keys.indexOf(key)  
+      answer = player1keys.indexOf(key)
     } else {
       console.warn("key is not in arrays " + key)
-      return 
+      return
     }
 
 
