@@ -58,9 +58,9 @@ export class PairMemoryGameComponent implements OnInit, OnDestroy {
   }
   private getCardList(): Card[] {
     var cardList: Card[] = []
-    let fileNames = ["clara1", "clara2", "clara3", "mama1", "nana", "nana2", "papa1", "tim1", "tim2", "papamaman"];
+    let fileNames = ["clara1", "clara2", "mama1", "nana", "nana2", "papa1", "tim1", "tim2", "papamaman"];
     fileNames = fileNames.map(fn => "assets/pair_memory_game/" + fn + ".PNG")
-    
+
     for (let fn of fileNames) {
       // Add twice a card with same img / color with versions 0 and 1 -> pair 
       // const imgPath = imagesPath[i]
@@ -68,24 +68,39 @@ export class PairMemoryGameComponent implements OnInit, OnDestroy {
       cardList.push(new Card(1, fn))
 
     }
+    console.log(cardList)
     return cardList;
   }
 
   private makeGrid(cards: Card[]): Array<Array<Card>> {
     const shuffledCards = _.shuffle(cards);
-    
-    var length = Math.floor(Math.sqrt(cards.length));
-    var width = cards.length / length;
+    const lengthWidth = this._getLengthWidth(cards.length)
+    const height = Math.min(...lengthWidth)
+    const width = Math.max(...lengthWidth)
     var grid:  Array<Array<Card>> = []
-    for (let i = 0; i<length; i++) {
+    for (let i = 0; i<height; i++) {
       grid[i] = []
       for (let j=0; j<width; j++) {
         grid[i].push(shuffledCards.pop())
       }
     }
+    console.log(grid)
 
     return grid;
 
+  }
+
+  private _getLengthWidth(length: number) {
+    let min_diff = length
+    let best_couple;
+    for (let d = 1; d < Math.floor(length/2); d++) {
+        let q = length/d
+        if (q == Math.floor(q)) {
+            min_diff = Math.max(q-d, d-q)
+            best_couple = [d, q]
+        }
+    }
+    return best_couple
   }
 
   public selectCard(card: Card) {

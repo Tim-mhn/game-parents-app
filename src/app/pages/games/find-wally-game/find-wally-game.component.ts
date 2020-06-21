@@ -7,6 +7,7 @@ import { EventEmitter } from 'events';
 import { ThrowStmt } from '@angular/compiler';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogElementComponent } from 'src/app/shared/dialog-element/dialog-element.component';
+import { GameStatus } from 'src/app/models/enums';
 
 
 @Component({
@@ -16,6 +17,9 @@ import { DialogElementComponent } from 'src/app/shared/dialog-element/dialog-ele
 })
 export class FindWallyGameComponent implements OnInit {
   @ViewChild('cd', { static: false }) public countdown: CountdownComponent;
+
+  public gameStatus: GameStatus = GameStatus.START
+  public gameStatusEnum: typeof GameStatus = GameStatus
 
   public waldoImageList: IWaldoImage[] = [
     {
@@ -80,29 +84,27 @@ export class FindWallyGameComponent implements OnInit {
   public startGame() {
     document.getElementById("countdown-container").hidden = false;
     this.gameStarted = true
+    this.gameStatus = GameStatus.PROGRESS
     this.countdown.begin()
     this.countdown.config.leftTime = this.timeToFind / 1000
     this.countdown.config.demand = false;
-    
 
     const imageSequenceObs = merge(this.countdownDoneEmitter, this.imageFoundEmitter)
 
     imageSequenceObs.subscribe((msg: string) => {
-      
-      
+
       if (msg == "done" && this.currentIWaldoImage) this.waldoImageList.push(this.currentIWaldoImage)
 
-      console.log(this.waldoImageList)
       if (this.waldoImageList.length==0) {
         this._endGame();
         return
-      } 
+      }
 
       this.currentIWaldoImage = this.waldoImageList.shift()
       setTimeout(() => this.countdown.restart()) // Need to use settimeout otherwise cd is just reset but doesn't start 
     })
 
-    setTimeout( () => { 
+    setTimeout( () => {
       this.countdown.restart();
     }, this.timeToStart)
 
@@ -115,14 +117,13 @@ export class FindWallyGameComponent implements OnInit {
       var img = document.getElementById(this.currentIWaldoImage.imageName);
       let x = event.pageX - img.offsetLeft
       let y = event.pageY - img.offsetTop
-      console.log(x, y)
       if (this.clickIsInBox(x, y, this.currentIWaldoImage.hitbox)) {
         this._findImage()
       } else if (this.clickIsInBox(x, y, this.currentIWaldoImage.hintBox)) {
         this._closeToImage()
       }
     } catch (Exception) {
-      console.log(Exception.message)
+      console.info(Exception.message)
     }
   }
 
@@ -131,7 +132,7 @@ export class FindWallyGameComponent implements OnInit {
     if (event.action == "done") {
       this.countdownDoneEmitter.next(event.action)
     }
-    
+
   }
   private _findImage() {
     this._snackbar.open(`You've found ${this.currentIWaldoImage.character} !`, 'Dismiss', {
@@ -162,6 +163,8 @@ export class FindWallyGameComponent implements OnInit {
         closeMsg: "Close"
       }
     })
+
+    this.gameStatus = GameStatus.END
   }
 
 }

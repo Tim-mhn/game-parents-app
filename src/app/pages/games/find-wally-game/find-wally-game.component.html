@@ -2,26 +2,41 @@
     <div fxLayout="column" fxLayoutAlign="start center">
         <div fxLayout="row" fxLayoutAlign="center" hidden=True id="countdown-container">
             <span class="dot">
-                <countdown 
-                    #cd 
-                    [config]="{leftTime: timeToStart/1000, demand: true, format: 's'}"
-                    (event)="onCountdownEvent($event)"
-                    >
+                <countdown #cd [config]="{leftTime: timeToStart/1000, demand: true, format: 's'}"
+                    (event)="onCountdownEvent($event)">
                 </countdown>
             </span>
         </div>
 
         <br>
-        <ng-container *ngIf="gameStarted; else homeGame">
-            <ng-container *ngIf="currentIWaldoImage">
-            <div fxLayout="row" fxLayoutAlign="center center">
-                <h2>Find {{ currentIWaldoImage.character}} !</h2>
+
+        <ng-container [ngSwitch]="gameStatus">
+
+            <div *ngSwitchCase="gameStatusEnum.START">
+                <ng-container *ngTemplateOutlet="homeGame"></ng-container>
             </div>
-            <div fxLayout="row">
-                <img [id]="currentIWaldoImage.imageName" [src]="'assets/' + currentIWaldoImage.imageName + '.png'">
+
+
+            <div *ngSwitchCase="gameStatusEnum.PROGRESS">
+                <ng-container *ngIf="currentIWaldoImage">
+                    <div fxLayout="row" fxLayoutAlign="center center">
+                        <h2>Find {{ currentIWaldoImage.character}} !</h2>
+                    </div>
+                    <div fxLayout="row">
+                        <img [id]="currentIWaldoImage.imageName"
+                            [src]="'assets/' + currentIWaldoImage.imageName + '.png'">
+                    </div>
+                </ng-container>
+            </div>
+
+
+
+            <div *ngSwitchCase="gameStatusEnum.END">
+                <br><br>
+                <h3>Bravo à tous, plus qu'un clic et vous arrivez à la fin de ce périple !</h3>
+                <p><a routerLink="/end" routerLinkActive="active">Accéder à la page de fin</a></p>
             </div>
         </ng-container>
-    </ng-container>
     </div>
 
 
@@ -33,16 +48,17 @@
 
 <ng-template #homeGame>
     <div fxLayout="column" fxLayoutAlign="start start">
-    <h2>Game explanations:</h2>
-    <h3>Time to play together !</h3>
-    <h3>You will have a series of images filled with people or animals</h3>
-    <h3>For each image, you will have {{timeToFind/1000}}s to find the mentionned character by clicking on it. </h3> 
-    <h3>Work together: one person using the mouse and both of you looking for the character in the image</h3>
-    <h3>Once you've found the character, a new image will pop up. 
-        If you can't find the character within the {{timeToFind/1000}}s, we will go the next image and come back to the image later on.
-    </h3>
-    <h3>When you're ready, click on Start !</h3>
+        <h2>Game explanations:</h2>
+        <h3>Time to play together !</h3>
+        <h3>You will have a series of images filled with people or animals</h3>
+        <h3>For each image, you will have {{timeToFind/1000}}s to find the mentionned character by clicking on it. </h3>
+        <h3>Work together: one person using the mouse and both of you looking for the character in the image</h3>
+        <h3>Once you've found the character, a new image will pop up.
+            If you can't find the character within the {{timeToFind/1000}}s, we will go the next image and come back to
+            the image later on.
+        </h3>
+        <h3>When you're ready, click on Start !</h3>
     </div>
-    <br>    
+    <br>
     <button mat-stroked-button color="primary" (click)="startGame()" style="width: 100%;">Start </button>
 </ng-template>

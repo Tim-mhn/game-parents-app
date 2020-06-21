@@ -33,7 +33,7 @@ export class QuizzGameComponent implements OnInit {
   public gameStatus: GameStatus = GameStatus.START
   public gameStatusEnum: typeof GameStatus = GameStatus
   public playerKeys = [["a", "e"], ["1", "3"]];
-  public timeToAnswer = 5000;
+  public timeToAnswer = 10000;
   public timeToStart = 3000; // 3..2..1 before starting 
   constructor(private playerService: PlayerService,
               private _snackBar: MatSnackBar,
@@ -44,11 +44,9 @@ export class QuizzGameComponent implements OnInit {
     this.subs.add(
       this.playerService.playersObs.subscribe((players: Player[]) => {
         this.players = players
-        console.log(this.players)
         players.forEach((p, i) => {
           this.playerToPoints[p.name] = 0;
           this.playerToKeys[p.name] = i == 0 ? ["a", "e"] : ["1", "3"]
-          // console.log(this.playerToPoints)
         }); // Initialize players points to 0
       })
     )
@@ -59,21 +57,21 @@ export class QuizzGameComponent implements OnInit {
 
   private getIQuizQuestions(): IQuizQuestion[] {
     let IQuizQuestions: IQuizQuestion[] = []
-    const baseQuestion = 'Qui est le plus susceptible de '
-    IQuizQuestions.push( { question: baseQuestion + 'ne pas se doucher pendant une semaine ?', choices: ['Clara', 'Annabel'], 'answer': 1 })
-    IQuizQuestions.push( { question: baseQuestion +'s\'énerver après avoir perdu un jeu de cartes ?', choices: ['Papa', 'Annabel'], 'answer': 0 })
-    IQuizQuestions.push( { question: baseQuestion +'dormir pendant 24h d\'affilées ?', choices: ['Tim', 'Annabel'], 'answer': 1 })
-    IQuizQuestions.push( { question: baseQuestion +'ne pas bien digérer l\'aïoli ?', choices: ['Maman', 'Clara'], 'answer': 0 })
-    IQuizQuestions.push( { question: baseQuestion +'ne pas aimer les gens gros ?', choices: ['Tim', 'Annabel'], 'answer': 0 })
-    IQuizQuestions.push( { question: baseQuestion +'être grosse ?', choices: ['Clara', 'Annabel'], 'answer': 0 })
-    IQuizQuestions.push( { question: baseQuestion +'se prendre un arbre en marchant ?', choices: ['Papouille', 'Clara'], 'answer': 1 })
-    IQuizQuestions.push( { question: baseQuestion +'faire fuir Papouille par son odeur ?', choices: ['Annabel', 'Tim'], 'answer': 0 })
-    IQuizQuestions.push( { question: baseQuestion +'chasser Papouille cruellement ?', choices: ['Tim', 'Clara'], 'answer': 0 })
-    IQuizQuestions.push( { question: baseQuestion +'jouer avec Papouille dans l\'escalier ?', choices: ['Clara', 'Papa'], 'answer': 1 })
-    IQuizQuestions.push( { question: baseQuestion +'dire "ah j\'ai un coup de bar!" ?', choices: ['Israel', 'Saudi Arabia'], 'answer': 1 })
-    IQuizQuestions.push( { question: baseQuestion +'faire une blague presque drôle ?', choices: ['Annabel', 'Papa'], 'answer': 1 })
-    IQuizQuestions.push( { question: baseQuestion +'tomber d\'une baignoire ?', choices: ['Clara', 'Maman'], 'answer': 0 })
-    IQuizQuestions.push( { question: baseQuestion +'se faire mordre les fesses par Pouille ?', choices: ['Annabel', 'Clara'], 'answer': 1 })
+    const baseQuestion = 'Qui est le plus susceptible '
+    IQuizQuestions.push( { question: baseQuestion + 'de ne pas se doucher pendant une semaine ?', choices: ['Clara', 'Annabel'], 'answer': 1 })
+    IQuizQuestions.push( { question: baseQuestion +'de s\'énerver après avoir perdu un jeu de cartes ?', choices: ['Papa', 'Annabel'], 'answer': 0 })
+    IQuizQuestions.push( { question: baseQuestion +'de dormir pendant 24h d\'affilées ?', choices: ['Tim', 'Annabel'], 'answer': 1 })
+    IQuizQuestions.push( { question: baseQuestion +'de ne pas bien digérer l\'aïoli ?', choices: ['Maman', 'Clara'], 'answer': 0 })
+    IQuizQuestions.push( { question: baseQuestion +'de ne pas aimer les gens gros ?', choices: ['Tim', 'Annabel'], 'answer': 0 })
+    IQuizQuestions.push( { question: baseQuestion +'d\'être grosse ?', choices: ['Clara', 'Annabel'], 'answer': 0 })
+    IQuizQuestions.push( { question: baseQuestion +'de se prendre un arbre en marchant ?', choices: ['Papouille', 'Clara'], 'answer': 1 })
+    IQuizQuestions.push( { question: baseQuestion +'de faire fuir Papouille par son odeur ?', choices: ['Annabel', 'Tim'], 'answer': 0 })
+    IQuizQuestions.push( { question: baseQuestion +'de chasser Papouille cruellement ?', choices: ['Tim', 'Clara'], 'answer': 0 })
+    IQuizQuestions.push( { question: baseQuestion +'de jouer avec Papouille dans l\'escalier ?', choices: ['Clara', 'Papa'], 'answer': 1 })
+    IQuizQuestions.push( { question: baseQuestion +'de dire "ah j\'ai un coup de bar!" ?', choices: ['Clara', 'Maman'], 'answer': 1 })
+    IQuizQuestions.push( { question: baseQuestion +'de faire une blague presque drôle ?', choices: ['Annabel', 'Papa'], 'answer': 1 })
+    IQuizQuestions.push( { question: baseQuestion +'de tomber d\'une baignoire ?', choices: ['Clara', 'Maman'], 'answer': 0 })
+    IQuizQuestions.push( { question: baseQuestion +'de se faire mordre les fesses par Papouille ?', choices: ['Annabel', 'Clara'], 'answer': 1 })
     IQuizQuestions.push({ question: 'End of quiz', choices: [], answer: 0 })
     return IQuizQuestions;
   }
@@ -143,7 +141,7 @@ export class QuizzGameComponent implements OnInit {
     // Instead of directly adding point, we let the player change his answer until countdown is over
     // In the timerQuestionsObs subscription callback, we check players answers and add points if correct 
     this.questionToAnswerHistory[currentQuestionIndex][player.name] = answer;
-    this._snackBar.open(player.name + " answered to question " + currentQuestionIndex.toString() + "  : answer", "Dismiss", {
+    this._snackBar.open(player.name + " answered to question " + currentQuestionIndex.toString() , "Dismiss", {
       duration: 500 // ms
     });
   }
@@ -151,14 +149,18 @@ export class QuizzGameComponent implements OnInit {
   private endQuiz() {
     let winner = this.players.reduce((best, current) => (this.playerToPoints[best.name] > this.playerToPoints[current.name]) ? best : current)
     let playerToPoints: Map<string, number> = <Map<string, number>> this.playerToPoints
+    console.log(Object.values(playerToPoints))
+    const pts = Object.values(playerToPoints)
+    const tie = pts[0] == pts[1]
     let winnerName = winner.name;
     let winnerPoints = playerToPoints[winnerName]
     this.playerService.addPoints(playerToPoints);
     this.gameStatus = GameStatus.END
+    const content = tie ? "It's a tie !" : (winnerName + " has won with " + winnerPoints + " points !")
     this._dialog.open(DialogElementComponent, {
       data: {
         title: "End of the game",
-        content: winnerName + " has won with " + winnerPoints + " points !",
+        content: content  ,
         closeMsg: "Close"
       }
     })

@@ -6,7 +6,7 @@
                 box-sizing: border-box;"
             class="card"
             [ngClass]=" { 'flipped': !card.selected && !card.foundPair}">
-    <img mat-card-image [src]="card.imgPath" alt="card.imgPath" class="front">
+    <img mat-card-image [src]="card.imgPath" [alt]="card.imgPath" class="front">
     <img mat-card-image class="back" src="https://opengameart.org/sites/default/files/card%20back%20black.png">
 </mat-card>
 </div>

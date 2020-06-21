@@ -24,6 +24,7 @@ import {MatInputModule} from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LeaderboardComponent } from './shared/leaderboard/leaderboard.component';
 import { OrderByPipe } from './pipes/order-by.pipe';
+import { EndComponent } from './pages/end/end.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +35,8 @@ import { OrderByPipe } from './pipes/order-by.pipe';
     DialogElementComponent,
     HomeComponent,
     LeaderboardComponent,
-    OrderByPipe
+    OrderByPipe,
+    EndComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +58,8 @@ import { OrderByPipe } from './pipes/order-by.pipe';
       { path: 'home', component: HomeComponent },
       { path: 'pair-memory-game', component: PairMemoryGameComponent },
       { path: 'quizz-game', component: QuizzGameComponent },
-      { path: 'find-wally-game', component: FindWallyGameComponent }
+      { path: 'find-wally-game', component: FindWallyGameComponent },
+      { path: 'end', component: EndComponent }
 
     ])
   ],
